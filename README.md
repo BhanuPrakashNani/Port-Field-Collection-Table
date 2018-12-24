@@ -1,4 +1,6 @@
-CONTENTS OF THIS FILE
+# Port Field Collection Table
+
+## CONTENTS OF THIS FILE
 
     Introduction
     Requirements
@@ -8,34 +10,35 @@ CONTENTS OF THIS FILE
     Maintainers
 
 
-INTRODUCTION
+## INTRODUCTION
+
+Provides a table formatter for the Field Collection module.
+This module provides both a field formatter and a widget for the Field Collection entity type.
 
 
-
-
-REQUIREMENTS
+## REQUIREMENTS
 
 The modules required are:
 
     [Field Collection](https://www.drupal.org/project/field_collection)
 
-INSTALLATION
+## INSTALLATION
 
 Install the Field Collection Table module as you would normally install a contributed Drupal module. Visit: for further information. Also take a look at this video on installing the module through git and URL.
 Visit: https://youtu.be/T0aDHuAHWf4
 
 
-CONFIGURATION
+## CONFIGURATION
 
     
 
 
-TROUBLESHOOTING
+## TROUBLESHOOTING
 
 If the module is not shown in the list try deleting the module and try cloning it again. or else try clearing the cache, and then try installing it.
 
 
-MAINTAINERS
+## MAINTAINERS
 
 1.[bhanuprakashnani](https://www.drupal.org/u/bhanuprakashnani)
 2.[chiranjeeb2410](https://www.drupal.org/u/chiranjeeb2410)
