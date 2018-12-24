@@ -37,5 +37,5 @@ If the module is not shown in the list try deleting the module and try cloning i
 
 MAINTAINERS
 
-bhanuprakashnani(https://www.drupal.org/u/bhanuprakashnani)
-chiranjeeb2410(https://www.drupal.org/u/chiranjeeb2410)
+[bhanuprakashnani](https://www.drupal.org/u/bhanuprakashnani)
+[chiranjeeb2410](https://www.drupal.org/u/chiranjeeb2410)
