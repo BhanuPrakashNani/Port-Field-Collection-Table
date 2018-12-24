@@ -30,15 +30,10 @@ Visit: https://youtu.be/T0aDHuAHWf4
 
 ## CONFIGURATION
 
-    
+
 
 
 ## TROUBLESHOOTING
 
 If the module is not shown in the list try deleting the module and try cloning it again. or else try clearing the cache, and then try installing it.
 
-
-## MAINTAINERS
-
-1.[bhanuprakashnani](https://www.drupal.org/u/bhanuprakashnani)
-2.[chiranjeeb2410](https://www.drupal.org/u/chiranjeeb2410)
