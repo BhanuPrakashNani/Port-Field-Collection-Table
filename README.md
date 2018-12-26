@@ -12,7 +12,7 @@
 
 ## INTRODUCTION
 
-Provides a table formatter for the Field Collection module.
+Provides a table formatter for the [Field Collection](https://www.drupal.org/project/field_collection) module.
 This module provides both a field formatter and a widget for the Field Collection entity type.
 
 
