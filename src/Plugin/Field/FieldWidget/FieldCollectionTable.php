@@ -1,14 +1,20 @@
-<?php /**
+<?php
+
+/**
  * @file
  * Contains \Drupal\field_collection_table\Plugin\Field\FieldWidget\FieldCollectionTable.
  */
+
 namespace Drupal\field_collection_table\Plugin\Field\FieldWidget;
+
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Symfony\Component\Validator\ConstraintViolationInterface;
+
 /**
  * @FieldWidget(
  *  id = "field_collection_table",
@@ -16,34 +22,72 @@ use Drupal\Core\Form\FormStateInterface;
  *  field_types = {"field_collection"}
  * )
  */
-class FieldCollectionTable extends WidgetBase {
+class FieldCollectionTable extends WidgetBase implements WidgetInterface  {
+
   /**
-   * @FIXME
-   * Move all logic relating to the field_collection_table widget into this class.
-   * For more information, see:
-   *
-   * https://www.drupal.org/node/1796000
-   * https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Field%21WidgetInterface.php/interface/WidgetInterface/8
-   * https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Field%21WidgetBase.php/class/WidgetBase/8
+   * {@inheritdoc}
    */
+  public function defaultSettings() {
+    return [
+      'nodragging' => FALSE,
+      'hide_title' => FALSE,
+      'placeholder' => '',
+    ] + parent::defaultSettings();
+  }
+
   /**
    * {@inheritdoc}
    */
   public function settingsForm(array $form, array &$form_state) {
-    $element['nodragging'] = array(
+
+    $element = [];
+
+    $element['nodragging'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Disable drag and drop'),
       '#description' => $this->t('If checked, users cannot rearrange the rows.'),
-      '#default_value' => $settings['nodragging'],
-      '#weight' => 2,
-    );
-    $element['hide_title'] = array(
+      '#default_value' => $this->getSetting('nodragging'),
+      '#weight' => 1,
+    ];
+
+    $element['hide_title'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Hide title'),
       '#description' => $this->t('If checked, the field title will be hidden.'),
-      '#default_value' => $this->getSetting['hide_title'],
-      '#weight' => 3,
-    );
+      '#default_value' => $this->getSetting('hide_title'),
+      '#weight' => 2,
+    ];
+
     return $element;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state)  {
+
+    $element = parent::formElement($items, $delta, $element, $form, $form_state);
+
+/**    $main_widget = $element + [
+      '#type' => 'textfield',
+      '#default_value' => isset($items[$delta]->value) ? $items[$delta]->value : NULL,
+      '#size' => $this->getSetting('size'),
+      '#placeholder' => $this->getSetting('placeholder'),
+      '#maxlength' => $this->getSetting('maxlength'),
+      '#attributes' => ['class' => ['text-full']],
+    ];
+
+    // add field_collection_field_widget_form settings
+
+*/
+
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function errorElement(array $element, ConstraintViolationInterface $violation, array $form, array &$form_state)  {
+    return $element[$violation->arrayPropertyPath[0]];
+  }
+
 }
