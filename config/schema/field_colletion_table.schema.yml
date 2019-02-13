@@ -7,4 +7,6 @@ field_collection_table.widget_settings:
       label: 'No dragging'
     hide_title:
       type: boolean
-label: 'Hide title'
+      label: 'Hide title'
+
+
