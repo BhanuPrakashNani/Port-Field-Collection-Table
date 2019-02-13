@@ -14,6 +14,13 @@ use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Component\Utility\NestedArray;
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\field_collection\Entity\FieldCollectionItem;
+use Drupal\Core\Render\Element;
 
 /**
  * @FieldWidget(
@@ -31,7 +38,6 @@ class FieldCollectionTable extends WidgetBase implements WidgetInterface  {
     return [
       'nodragging' => FALSE,
       'hide_title' => FALSE,
-      'placeholder' => '',
     ] + parent::defaultSettings();
   }
 
@@ -56,7 +62,7 @@ class FieldCollectionTable extends WidgetBase implements WidgetInterface  {
       '#description' => $this->t('If checked, the field title will be hidden.'),
       '#default_value' => $this->getSetting('hide_title'),
       '#weight' => 2,
-    ];
+    ]
 
     return $element;
   }
@@ -64,23 +70,60 @@ class FieldCollectionTable extends WidgetBase implements WidgetInterface  {
   /**
    * {@inheritdoc}
    */
-  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state)  {
+  public function formElement(FieldItemListInterface $items, $delta, array $element,
+    array &$form, FormStateInterface $form_state)  {
 
-    $element = parent::formElement($items, $delta, $element, $form, $form_state);
+    //building the form using field_collection_embed and not calling the same
+    //TODO: alter formElement by calling field_collection_embed instead
+    $field_name = $this->fieldDefinition->getName();
 
-/**    $main_widget = $element + [
-      '#type' => 'textfield',
-      '#default_value' => isset($items[$delta]->value) ? $items[$delta]->value : NULL,
-      '#size' => $this->getSetting('size'),
-      '#placeholder' => $this->getSetting('placeholder'),
-      '#maxlength' => $this->getSetting('maxlength'),
-      '#attributes' => ['class' => ['text-full']],
+    $parents = array_merge($element['#field_parents'], array($field_name, $delta));
+
+    $element += [
+      '#element_validate' => [[static::class, 'validate']],
+      '#parents' => $parents,
+      '#field_name' => $field_name,
     ];
 
-    // add field_collection_field_widget_form settings
+    if ($this->fieldDefinition->getFieldStorageDefinition()->getCardinality() == 1) {
+      $element['#type'] = 'fieldset';
+    }
 
-*/
+    $field_state = static::getWidgetState($element['#field_parents'], $field_name, $form_state);
 
+    $display = entity_get_form_display('field_collection_item', $field_name, 'default');
+    $display->buildForm($field_collection_item, $element, $form_state);
+
+    if (empty($element['#required'])) {
+      $element['#after_build'][] = [static::class, 'delayRequiredValidation'];
+      $form['#attributes']['novalidate'] = 'novalidate';
+    }
+
+    if ($this->fieldDefinition->getFieldStorageDefinition()->getCardinality() == FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) {
+      $options = ['query' => ['element_parents' => implode('/', $element['#parents'])]];
+
+      $element['actions'] = [
+        '#type' => 'actions',
+        'remove_button' => [
+          '#delta' => $delta,
+          '#name' => implode('_', $parents) . '_remove_button',
+          '#type' => 'submit',
+          '#value' => t('Remove'),
+          '#validate' => [],
+          '#submit' => [[static::class, 'removeSubmit']],
+          '#limit_validation_errors' => [],
+          '#ajax' => [
+            'callback' => [$this, 'ajaxRemove'],
+            'options' => $options,
+            'effect' => 'fade',
+            'wrapper' => $form['#wrapper_id'],
+          ],
+          '#weight' => 1000,
+        ],
+      ];
+    }
+
+    return $element;
   }
 
   /**
