@@ -32,41 +32,35 @@ class FieldCollectionTableView extends FormatterBase {
    */
 
 public function settingsForm(array $form, array &$form_state) {
-  $element = array();
-
-  $field_collections = field_info_instances('field_collection_item', $instance['field_name']);
-
-  $field_options = array('none' => t('None'));
-
-  foreach ($field_collections as $key => $value) {
-    $field_options[$key] = $value['label'];
+  $element = [];
+  $field_options = array('none' => $this->t('None'));
 
   $options = array(
-    'columns' => t('Columns'),
-    'rows' => t('Rows') );
+    'columns' => $this->t('Columns'),
+    'rows' => $this->t('Rows') );
 
   $element['hide_empty'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Hide empty collection'),
+    '#title' => $this->t('Hide empty collection'),
     '#default_value' => $this->getSettings('hide_empty'),
-    '#description' => t('If enabled, nothing will be displayed for an empty collection (not even the add link).'),
+    '#description' => $this->t('If enabled, nothing will be displayed for an empty collection (not even the add link).'),
   );
   $element['empty'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Hide empty columns'),
-    '#description' => t('If checked, hides empty table columns.'),
+    '#title' => $this->t('Hide empty columns'),
+    '#description' => $this->t('If checked, hides empty table columns.'),
     '#default_value' => $this->getSettings('empty'),
   );
   $element['caption'] = array(
     '#type' => 'textfield',
-    '#title' => t('Table caption'),
-    '#description' => t('Displayed in the caption element above the table'),
+    '#title' => $this->t('Table caption'),
+    '#description' => $this->t('Displayed in the caption element above the table'),
     '#default_value' => $this->getSettings('caption'),
   );
   $element['orientation'] = array(
     '#type' => 'select',
-    '#title' => t('Orientation'),
-    '#description' => t('Set the orientation of the table'),
+    '#title' => $this->t('Orientation'),
+    '#description' => $this->t('Set the orientation of the table'),
     '#options' => $options,
     ),
     '#default_value' => $this->getSettings('orientation'),
@@ -74,8 +68,8 @@ public function settingsForm(array $form, array &$form_state) {
 
   $element['header_column'] = array(
     '#type' => 'select',
-    '#title' => t('Header field'),
-    '#description' => t('The selected field value will be used as the horizontal table header'),
+    '#title' => $this->t('Header field'),
+    '#description' => $this->t('The selected field value will be used as the horizontal table header'),
     '#options' => $field_options,
     '#states'=> array('visible' => array(':input[name="fields[field_fc][settings_edit_form][settings][orientation]"]' => array('value' => 'rows'))),
   );
