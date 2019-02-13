@@ -1,0 +1,10 @@
+field_collection_table.widget_settings:
+  type: mapping
+  label: 'Field Collection Table widget settings'
+  mapping:
+    nodragging:
+      type: boolean
+      label: 'No dragging'
+    hide_title:
+      type: boolean
+label: 'Hide title'
