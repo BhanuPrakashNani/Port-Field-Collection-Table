@@ -77,4 +77,54 @@ public function settingsForm(array $form, array &$form_state) {
   return $element;
    }
 
+
+  public function settingsSummary() {
+
+    $output = settingsSummary();
+
+    if ($display['type'] === 'field_collection_table_view') {
+    $output .= '<br>';
+    $output .= !empty($this->getSetting['hide_empty']) ? $this->t('Empty collections: Hidden') : $this->t('Empty collections: Shown');
+    $output .= '<br>';
+    $output .= !empty($this->getSetting['empty']) ? $this->t('Empty columns: Hidden') : $this->t('Empty columns: Shown');
+    $output .= !empty($this->getSetting['caption']) ? '<br>' . $this->t('Caption: %caption', array('%caption' => $this->t($settings['caption']))) : '';
+    $orientations = array('columns' => $this->t('Column'), 'rows' => $this->t('Row'));
+    $output .= '<br />';
+    $output .= !empty($this->getSetting['empty']) ? $this->t('Empty columns: Hidden') : $this->t('Empty columns: Shown');
+    if (isset($this->getSetting['orientation'])) {
+      $output .= '<br />';
+      $output .= $this->t('Format fields as <strong>!orientation</strong>.', array('!orientation' => $orientations[$this->getSetting['orientation']]));
+    }
+    if (isset($this->getSetting['orientation']) && $this->getSetting['orientation'] === 'rows') {
+      $output .= '<br />';
+      if (isset($this->getSetting['header_column']) && $this->getSetting['header_column'] !== 'none') {
+        $output .= '<br />';
+        $output .= $this->t('Field @field value is used as the header', array('@field' => $this->getSettings['header_column']));
+      }
+    }
+  }
+  return $output;
+  }
+
+  public function viewElements(FieldItemListInterface $items, $langcode) {
+   $elements = array();
+   $settings = $this->getFieldSettings();
+
+   if (empty($items) && !empty($this->settings['hide_empty'])) {
+   return $element;
+  }
+
+  if ($this->settings['orientation'] === 'columns') {
+   _field_collection_table_column_mode($element, $settings, $items, $langcode);
+  }
+
+  if ($this->settings['orientation'] === 'rows') {
+   _field_collection_table_row_mode($element, $settings, $items, $langcode);
+  }
+
+  field_collection_field_formatter_links($element, $settings, $items, $langcode);
+
+  return $element;
+  }
+
 }
