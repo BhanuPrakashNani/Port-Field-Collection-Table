@@ -1,4 +1,6 @@
-<?php /**
+<?php
+
+/**
  * @file
  * Contains \Drupal\field_collection_table\Plugin\Field\FieldFormatter\FieldCollectionTableView.
  */
@@ -21,15 +23,52 @@ use Drupal\Core\Form\FormStateInterface;
  */
 class FieldCollectionTableView extends FormatterBase {
 
-  /**
-   * @FIXME
-   * Move all logic relating to the field_collection_table_view formatter into this
-   * class. For more information, see:
-   *
-   * https://www.drupal.org/node/1805846
-   * https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Field%21FormatterInterface.php/interface/FormatterInterface/8
-   * https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Field%21FormatterBase.php/class/FormatterBase/8
-   */
+  public function settingsForm(array $form, FormStateInterface $form_state) {
+
+    $element = [];
+
+    $element['hide_empty'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Hide empty collection'),
+      '#default_value' => $this->getSetting('hide_empty'),
+      '#description' => t('If enabled, nothing will be displayed for an empty collection (not even the add link).'),
+    ];
+
+    $element['empty'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Hide empty columns'),
+      '#description' => $this->t('If checked, hides empty table columns.'),
+      '#default_value' => $this->getSetting('empty'),
+    ];
+
+    $element['caption'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Table caption'),
+      '#description' => $this->t('Displayed in the caption element above the table'),
+      '#default_value' => $this->getSetting('caption'),
+    ];
+
+    $element['orientation'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Orientation'),
+      '#description' => $this->t('Set the orientation of the table'),
+      '#options' => [
+        'columns' => $this->t('Columns'),
+        'rows' => $this->t('Rows'),
+      ],
+      '#default_value' => $this->getSetting('orientation'),
+    );
+
+    $element['header_column'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Header field'),
+      '#description' => $this->t('The selected field value will be used as the horizontal table header'),
+      '#options' => $field_options,
+      '#states'=> ['visible' => [':input[name="fields[field_fc][settings_edit_form][settings][orientation]"]' => ['value' => 'rows']]],
+    ];
+
+    return $element;
+  }
 
 
 
