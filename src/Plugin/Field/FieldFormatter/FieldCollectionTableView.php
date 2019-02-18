@@ -78,37 +78,6 @@ class FieldCollectionTableView extends FormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function viewElements(FieldItemListInterface $items, $langcode) {
-    $element = [];
-    $settings = $this->getFieldSettings();
-
-    foreach ($items as $delta => $item) {
-      // Render each element as markup.
-      $element[$delta] = ['#markup' => $item->value];
-    }
-
-    if (empty($items) && !empty($this->getSetting('hide_empty'))) {
-      return $element;
-    }
-
-/**
-// todo: modify the table method callback functions to sync with d8
-    if ($settings['orientation'] === 'columns') {
-      _field_collection_table_column_mode($element, $settings, $entity_type,
-        $entity, $field, $instance, $langcode, $items, $display);
-    }
-    if ($settings['orientation'] === 'rows') {
-      _field_collection_table_row_mode($element, $settings, $entity_type,
-        $entity, $field, $instance, $langcode, $items, $display);
-    }
-*/
-
-    return $element;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function settingsSummary()  {
 
     $output = settingsSummary();
