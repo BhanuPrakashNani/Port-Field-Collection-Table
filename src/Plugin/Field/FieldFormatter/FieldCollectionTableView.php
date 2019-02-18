@@ -23,15 +23,19 @@ use Drupal\Core\Form\FormStateInterface;
  */
 class FieldCollectionTableView extends FormatterBase {
 
+  /**
+   * {@inheritdoc}
+   */
   public function settingsForm(array $form, FormStateInterface $form_state) {
 
     $element = [];
+    $field_options = ['none' => $this->t('None')];
 
     $element['hide_empty'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Hide empty collection'),
       '#default_value' => $this->getSetting('hide_empty'),
-      '#description' => t('If enabled, nothing will be displayed for an empty collection (not even the add link).'),
+      '#description' => $this->t('If enabled, nothing will be displayed for an empty collection (not even the add link).'),
     ];
 
     $element['empty'] = [
@@ -64,8 +68,54 @@ class FieldCollectionTableView extends FormatterBase {
       '#title' => $this->t('Header field'),
       '#description' => $this->t('The selected field value will be used as the horizontal table header'),
       '#options' => $field_options,
-      '#states'=> ['visible' => [':input[name="fields[field_fc][settings_edit_form][settings][orientation]"]' => ['value' => 'rows']]],
+      '#states'=> ['visible' => [':input[name="fields[field_fc]
+      [settings_edit_form][settings][orientation]"]' => ['value' => 'rows']]],
     ];
+
+    return $element;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsSummary()  {
+
+    $output = settingsSummary();
+
+    $output .= '<br>';
+    $output .= !empty($this->getSetting('hide_empty')) ? $this->t('Empty collections: Hidden') : $this->t('Empty collections: Shown');
+    $output .= '<br>';
+    $output .= !empty($this->getSetting('empty')) ? $this->t('Empty columns: Hidden') : $this->t('Empty columns: Shown');
+    $output .= !empty($this->getSetting('caption')) ? '<br>' . $this->t('Caption: %caption', ['%caption' => $this->t($this->getSetting('caption'))]) : '';
+    $orientations = ['columns' => $this->t('Column'), 'rows' => $this->t('Row')];
+    $output .= '<br />';
+    $output .= !empty($this->getSetting('empty')) ? $this->t('Empty columns: Hidden') : $this->t('Empty columns: Shown');
+    if (isset($this->getSetting('orientation'))) {
+      $output .= '<br />';
+      $output .= $this->t('Format fields as <strong>!orientation</strong>.', ['!orientation' => $orientations[$this->getSetting('orientation')]]);
+    }
+    if (isset($this->getSetting('orientation')) && $this->getSetting('orientation') === 'rows') {
+      $output .= '<br />';
+      if (isset($this->getSetting('header_column')) && $this->getSetting('header_column') !== 'none') {
+        $output .= '<br />';
+        $output .= $this->t('Field @field value is used as the header', ['@field' => $this->getSetting('header_column')]);
+      }
+    }
+
+    return $output;
+
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function viewElements(FieldItemListInterface $items, $langcode) {
+    $element = [];
+
+    foreach ($items as $delta => $item) {
+      // Render each element as markup.
+      $element[$delta] = ['#markup' => $item->value];
+    }
 
     return $element;
   }
