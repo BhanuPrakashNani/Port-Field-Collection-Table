@@ -1,33 +1,8 @@
-<?php
+name: 'Field Collection Table'
+type: module
+description: 'Provides a field-collection table formatter.'
+core: 8.x
+package: 'Custom'
 
-/**
- * @file
- * Install, update and uninstall functions for the Field Collection Table module.
- */
-
-/**
- * Implements hook_uninstall().
- */
-function field_collection_table_uninstall() {
-  \Drupal::config('field_collection_table.settings')->clear('field_collection_table_format_form')->save();
-  \Drupal::config('field_collection_table.settings')->clear('field_collection_table_hide_empty')->save();
-}
-
-/**
- * Updates FCT Field Instances with new formatter settings.
- */
-function field_collection_table_update_7001() {
-  foreach (field_info_instances() as $entity_type => $entity) {
-    foreach ($entity as $entity_name => $info) {
-      foreach ($info as $field_name => $instance) {
-        if (!empty($instance['widget']['type']) && $instance['widget']['type'] == 'field_collection_table') {
-          if (isset($instance['widget']['settings']['title_on_top'])) {
-            $instance['widget']['settings']['hide_title'] = !$instance['widget']['settings']['title_on_top'];
-            unset($instance['widget']['settings']['title_on_top']);
-          }
-          $instance->save();
-        }
-      }
-    }
-  }
-}
+dependencies:
+  - field_collection
