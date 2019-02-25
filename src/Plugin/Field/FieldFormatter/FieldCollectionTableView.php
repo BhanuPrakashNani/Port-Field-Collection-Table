@@ -91,17 +91,15 @@ class FieldCollectionTableView extends FormatterBase {
       return $element;
     }
 
-/**
-// todo: modify the table method callback functions to sync with d8
-    if ($settings['orientation'] === 'columns') {
+    // todo: modify the table method callback functions to sync with d8
+    if ($this->getSetting('orientation') === 'columns') {
       _field_collection_table_column_mode($element, $settings, $entity_type,
         $entity, $field, $instance, $langcode, $items, $display);
     }
-    if ($settings['orientation'] === 'rows') {
+    if ($this->getSetting('orientation') === 'rows') {
       _field_collection_table_row_mode($element, $settings, $entity_type,
         $entity, $field, $instance, $langcode, $items, $display);
     }
-*/
 
     return $element;
   }
