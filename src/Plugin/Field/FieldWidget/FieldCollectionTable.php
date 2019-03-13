@@ -21,6 +21,7 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\field_collection\Entity\FieldCollectionItem;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 
 /**
  * @FieldWidget(
@@ -91,7 +92,12 @@ class FieldCollectionTable extends WidgetBase implements WidgetInterface  {
 
     $field_state = static::getWidgetState($element['#field_parents'], $field_name, $form_state);
 
-    $display = entity_get_form_display('field_collection_item', $field_name, 'default');
+    $display = \Drupal::service('entity_display.repository')
+      ->getFormDisplay('field_collection_item', $field_name)
+      ->setComponent($field_name, [
+        'type' => 'text_textfield',
+      ]);
+      ->save();
     $display->buildForm($field_collection_item, $element, $form_state);
 
     if (empty($element['#required'])) {
