@@ -61,7 +61,7 @@ class FieldCollectionTableView extends FormatterBase {
         'rows' => $this->t('Rows'),
       ],
       '#default_value' => $this->getSetting('orientation'),
-    );
+    ];
 
     $element['header_column'] = [
       '#type' => 'select',
@@ -90,20 +90,6 @@ class FieldCollectionTableView extends FormatterBase {
     if (empty($items) && !empty($this->getSetting('hide_empty'))) {
       return $element;
     }
-
-/**
-// todo: modify the table method callback functions to sync with d8
-    if ($settings['orientation'] === 'columns') {
-      _field_collection_table_column_mode($element, $settings, $entity_type,
-        $entity, $field, $instance, $langcode, $items, $display);
-    }
-    if ($settings['orientation'] === 'rows') {
-      _field_collection_table_row_mode($element, $settings, $entity_type,
-        $entity, $field, $instance, $langcode, $items, $display);
-    }
-*/
-
-    return $element;
   }
 
   /**
@@ -121,7 +107,7 @@ class FieldCollectionTableView extends FormatterBase {
     $orientations = ['columns' => $this->t('Column'), 'rows' => $this->t('Row')];
     $output .= '<br />';
     $output .= !empty($this->getSetting('empty')) ? $this->t('Empty columns: Hidden') : $this->t('Empty columns: Shown');
-    if (isset($this->getSetting('orientation'))) {
+    if (!empty($this->getSetting('orientation'))) {
       $output .= '<br />';
       $output .= $this->t('Format fields as <strong>!orientation</strong>.', ['!orientation' => $orientations[$this->getSetting('orientation')]]);
     }

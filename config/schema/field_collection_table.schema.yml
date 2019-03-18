@@ -8,5 +8,3 @@ field_collection_table.widget_settings:
     hide_title:
       type: boolean
       label: 'Hide title'
-
-
