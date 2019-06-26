@@ -8,6 +8,7 @@
 namespace Drupal\field_collection_table\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\WidgetBase;
+use Drupal\Core\Field\WidgetInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
@@ -35,7 +36,7 @@ class FieldCollectionTable extends WidgetBase implements WidgetInterface  {
   /**
    * {@inheritdoc}
    */
-  public function defaultSettings() {
+  public static function defaultSettings() {
     return [
       'nodragging' => FALSE,
       'hide_title' => FALSE,
@@ -45,7 +46,7 @@ class FieldCollectionTable extends WidgetBase implements WidgetInterface  {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state) {
+  public function settingsForm(array $form, FormStateInterface $form_state) {
 
     $element = [];
 
@@ -63,7 +64,7 @@ class FieldCollectionTable extends WidgetBase implements WidgetInterface  {
       '#description' => $this->t('If checked, the field title will be hidden.'),
       '#default_value' => $this->getSetting('hide_title'),
       '#weight' => 2,
-    ]
+    ];
 
     return $element;
   }
@@ -97,7 +98,7 @@ class FieldCollectionTable extends WidgetBase implements WidgetInterface  {
       ->setComponent($field_name, [
         'type' => 'text_textfield',
       ]);
-      ->save();
+    save();
     $display->buildForm($field_collection_item, $element, $form_state);
 
     if (empty($element['#required'])) {
@@ -135,7 +136,7 @@ class FieldCollectionTable extends WidgetBase implements WidgetInterface  {
   /**
    * {@inheritdoc}
    */
-  public function errorElement(array $element, ConstraintViolationInterface $violation, array $form, array &$form_state)  {
+  public function errorElement(array $element, ConstraintViolationInterface $violation, array $form, FormStateInterface $form_state)  {
     return $element[$violation->arrayPropertyPath[0]];
   }
 
